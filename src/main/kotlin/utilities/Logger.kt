@@ -14,7 +14,9 @@ object Logger {
         println("[${stamp()}] [$level] $message")
     }
 
+    fun debug(message: String) { log("DEBUG", message) }
     fun info(message: String) { log("INFO", message) }
+    fun error(message: String) { log("ERROR", message) }
 
     fun discord(message: Message) {
         suspend {

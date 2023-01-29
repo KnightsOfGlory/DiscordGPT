@@ -30,15 +30,32 @@ object Discord {
                     Logger.discord(message)
 
                     val username = message.author?.username
-                    val talk = EmojiParser.parseToAliases(message.content).take(237)
+//                    val talk = EmojiParser.parseToAliases(message.content).take(237)
                     val mentions = message.mentionedUsers.filter { it.username == "ChatGPT" }
 
-                    val response = OpenAI.complete(talk)
-
+                    Memory.remember(message.channelId, message)
 
                     if (username != "ChatGPT" && mentions.count() > 0) {
-                        Logger.info("Sending to $username...")
-                        send(message.channelId, response)
+                        val conversation = Memory.recall(message.channelId)
+                        val participants = Memory.participants(message.channelId)
+
+                        Logger.debug("Conversation: $conversation")
+                        Logger.debug("Participants: $participants")
+
+                        Thread.sleep(1000)
+                        val response = OpenAI.complete(conversation, participants)
+                        Logger.debug("Response length: ${response.length}")
+                        if (response.isNotEmpty()) {
+                            Logger.info("Response: $response")
+                            val author = "<@${message.author?.id}>"
+
+                            Logger.debug("Sending to $username...")
+                            send(message.channelId, "$author: $response")
+                        } else {
+                            Logger.debug("Empty response from OpenAI")
+                        }
+                    } else {
+                        Logger.debug("Username: $username, mentions: ${mentions.count()}")
                     }
                 }
 

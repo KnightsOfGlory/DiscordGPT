@@ -14,6 +14,7 @@ dependencies {
     implementation "dev.kord:kord-core:0.8.0-M17"
     implementation "com.vdurmont:emoji-java:5.1.1"
     implementation 'com.theokanning.openai-gpt3-java:client:0.9.0'
+    implementation 'org.apache.commons:commons-collections4:4.4'
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
 }
 
